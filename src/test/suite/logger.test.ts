@@ -1,26 +1,18 @@
 import * as sinon from 'sinon';
 import { Logger } from '../../logger';
+import { VSCodeFactory } from './stubs';
 
 suite('Logger', () => {
-	function vscode() {
-		return {
-			window: {
-				createOutputChannel: sinon.stub(),
-			}
-		};
-	}
 	test('has function to write', () => {
-		const vscodeInstance = vscode();
-		const outputChannel = { appendLine: sinon.stub() }
-		vscodeInstance.window.createOutputChannel.returns(outputChannel);
+    const vscodeFactory = new VSCodeFactory().create();
 
-		const log = new Logger(vscodeInstance);
+		const log = new Logger(vscodeFactory.vscode);
 		log.write('Hello World');
 
-		sinon.assert.calledOnce(vscodeInstance.window.createOutputChannel);
-		sinon.assert.alwaysCalledWithExactly(vscodeInstance.window.createOutputChannel, `dbx`);
+		sinon.assert.calledOnce(vscodeFactory.vscode.window.createOutputChannel);
+		sinon.assert.alwaysCalledWithExactly(vscodeFactory.vscode.window.createOutputChannel, `dbx`);
 
-		sinon.assert.calledOnce(outputChannel.appendLine);
-		sinon.assert.alwaysCalledWithExactly(outputChannel.appendLine, `Hello World`);
+		sinon.assert.calledOnce(vscodeFactory.windowCreateOutputChannel.appendLine);
+		sinon.assert.alwaysCalledWithExactly(vscodeFactory.windowCreateOutputChannel.appendLine, `Hello World`);
 	});
 });

@@ -1,31 +1,51 @@
-// import sinon = require('sinon');
-// import { Deployment } from '../../deployment';
-// import assert = require('assert');
+import sinon = require('sinon');
+import { Deployment } from '../../deployment';
+import assert = require('assert');
+import { Logger } from '../../logger';
+import { VSCodeFactory } from './stubs';
 
-// suite('Deployment', () => {
-// 	function vscode() {
-// 		return {
-// 			workspace: {
-// 				openTextDocument: sinon.stub(),
-// 			}
-// 		};
-// 	}
-// 	test('has function to get environments', async (done) => {
-// 		const vscodeInstance = vscode();
-// 		const document = { getText: sinon.stub() };
-// 		document.getText.returns(`
-// environments:
-//   default:
-//   other:
-// `);
-// 		vscodeInstance.workspace.openTextDocument.returns([document]);
-// 		const deployment = new Deployment(vscodeInstance, 'deployment.test.yml');
+suite('Deployment', () => {
 
-// 		const environments = await deployment.getEnvironments();
+  test('shows error when deployment file not found', async () => {
+    const vscodeFactory = new VSCodeFactory()
+      .withWorkspaceFindFiles([])
+      .create();
 
-// 		assert.equal(environments.length, 2);
-// 		assert.deepEqual(environments, ['other', 'default']);
+    await Deployment.init(vscodeFactory.vscode, new Logger(vscodeFactory.vscode));
 
-// 		done();
-// 	});
-// });
+    sinon.assert.calledOnce(vscodeFactory.vscode.window.showErrorMessage);
+    sinon.assert.alwaysCalledWithExactly(vscodeFactory.vscode.window.showErrorMessage, 'Unable to load conf/deployment.yml');
+  });
+
+  test('returns empty deployment when deployment file not found', async () => {
+    const vscodeFactory = new VSCodeFactory()
+      .withWorkspaceFindFiles([])
+      .create();
+
+    const deployment = await Deployment.init(vscodeFactory.vscode, new Logger(vscodeFactory.vscode));
+
+    assert.deepEqual(deployment.getEnvironments(), []);
+  });
+
+  test('has function to get environments', async () => {
+    const vscodeFactory = new VSCodeFactory()
+      .create();
+    const deployment = await Deployment.init(vscodeFactory.vscode, new Logger(vscodeFactory.vscode));
+
+    const environments = deployment.getEnvironments();
+
+    assert.equal(environments.length, 2);
+    assert.deepEqual(environments, ['default', 'other']);
+  });
+  
+  test('has function to get workflows', async () => {
+    const vscodeFactory = new VSCodeFactory()
+      .create();
+    const deployment = await Deployment.init(vscodeFactory.vscode, new Logger(vscodeFactory.vscode));
+
+    const workflows = deployment.getWorkflows('default');
+
+    assert.equal(workflows.length, 2);
+    assert.deepEqual(workflows, ['workflow1', 'workflow2']);
+  });
+});
