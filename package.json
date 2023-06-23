@@ -17,7 +17,11 @@
     "commands": [
       {
         "command": "dbx.helloWorld",
-        "title": "Hello World"
+        "title": "dbx:Hello World"
+      },
+      {
+        "command": "dbx.execute",
+        "title": "dbx:Execute workflow"
       }
     ]
   },
@@ -45,6 +49,7 @@
   },
   "dependencies": {
     "@types/sinon": "^10.0.15",
-    "sinon": "^15.2.0"
+    "sinon": "^15.2.0",
+    "yaml": "^2.3.1"
   }
 }
