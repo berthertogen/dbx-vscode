@@ -6,11 +6,11 @@ import { HelloWorld } from '../../../commands/hello-world';
 import { Logger } from '../../../logger';
 
 	suite('HelloWorld', () => {
-		let stub_showInformationMessage: sinon.SinonStub;
+		let showInformationMessage: sinon.SinonStub;
 		let sandbox: sinon.SinonSandbox = sinon.createSandbox();
 
 		beforeEach(() => {
-			stub_showInformationMessage = sandbox.stub(window, 'showInformationMessage');
+			showInformationMessage = sandbox.stub(window, 'showInformationMessage');
 		});
 
 		afterEach(() => {
@@ -28,6 +28,6 @@ import { Logger } from '../../../logger';
 
 			await command.action();
 
-			sandbox.assert.calledOnceWithExactly(stub_showInformationMessage, `Hello World from dbx!`);
+			sandbox.assert.calledOnceWithExactly(showInformationMessage, `Hello World from dbx!`);
 		});
 	});

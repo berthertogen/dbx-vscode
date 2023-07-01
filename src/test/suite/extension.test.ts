@@ -7,10 +7,10 @@ import { beforeEach, afterEach } from 'mocha';
 suite('Extensions', () => {
 	let sandbox: sinon.SinonSandbox = sinon.createSandbox();
 
-	let stub_registerCommand: sinon.SinonStub;
+	let registerCommand: sinon.SinonStub;
 
 	beforeEach(() => {
-		stub_registerCommand = sandbox.stub(commands, 'registerCommand');
+		registerCommand = sandbox.stub(commands, 'registerCommand');
 	});
 
 	afterEach(() => {
@@ -22,8 +22,8 @@ suite('Extensions', () => {
 		activate(context);
 
 		assert.equal(context.subscriptions.length, 3);
-		sinon.assert.calledWith(stub_registerCommand, 'dbx.helloWorld');
-		sinon.assert.calledWith(stub_registerCommand, 'dbx.execute');
-		sinon.assert.calledWith(stub_registerCommand, 'dbx.configure');
+		sinon.assert.calledWith(registerCommand, 'dbx.helloWorld');
+		sinon.assert.calledWith(registerCommand, 'dbx.execute');
+		sinon.assert.calledWith(registerCommand, 'dbx.configure');
 	});
 });

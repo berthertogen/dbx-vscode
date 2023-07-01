@@ -10,22 +10,22 @@ import { Logger } from '../../../logger';
 suite('Execute', () => {
 	let sandbox: sinon.SinonSandbox = sinon.createSandbox();
 
-	let stub_init: sinon.SinonStub;
-	let stub_showQuickPick: sinon.SinonStub;
-	let stub_createTerminal: sinon.SinonStub;
-	const stub_terminal = { show: sandbox.stub(), sendText: sandbox.stub() } as any
-	let stub_showInformationMessage: sinon.SinonStub;
+	let init: sinon.SinonStub;
+	let showQuickPick: sinon.SinonStub;
+	let createTerminal: sinon.SinonStub;
+	const terminal = { show: sandbox.stub(), sendText: sandbox.stub() } as any;
+	let showInformationMessage: sinon.SinonStub;
 
 	beforeEach(() => {
-		stub_showQuickPick = sandbox.stub(window, 'showQuickPick');
-		stub_createTerminal = sandbox.stub(window, 'createTerminal');
-		stub_showInformationMessage = sandbox.stub(window, 'showInformationMessage');
-		stub_init = sandbox.stub(Deployment, 'init');
+		showQuickPick = sandbox.stub(window, 'showQuickPick');
+		createTerminal = sandbox.stub(window, 'createTerminal');
+		showInformationMessage = sandbox.stub(window, 'showInformationMessage');
+		init = sandbox.stub(Deployment, 'init');
 
-		stub_showQuickPick.withArgs(['default', 'other']).returns('default');
-		stub_showQuickPick.withArgs(['workflow1', 'workflow2']).returns('workflow1');
-		stub_createTerminal.returns(stub_terminal);
-		stub_init.returns({
+		showQuickPick.withArgs(['default', 'other']).returns('default');
+		showQuickPick.withArgs(['workflow1', 'workflow2']).returns('workflow1');
+		createTerminal.returns(terminal);
+		init.returns({
 			getEnvironments: () => ['default', 'other'],
 			getWorkflows: () => ['workflow1', 'workflow2']
 		} as any);
@@ -46,11 +46,11 @@ suite('Execute', () => {
 
 		await command.action();
 
-		sinon.assert.calledOnce(stub_terminal.show);
-		sinon.assert.calledOnce(stub_terminal.sendText);
-		sinon.assert.alwaysCalledWithExactly(stub_terminal.sendText, 'dbx execute workflow1 --environment default');
+		sinon.assert.calledOnce(terminal.show);
+		sinon.assert.calledOnce(terminal.sendText);
+		sinon.assert.alwaysCalledWithExactly(terminal.sendText, 'dbx execute workflow1 --environment default');
 
-		sinon.assert.calledOnce(stub_showInformationMessage);
-		sinon.assert.alwaysCalledWithExactly(stub_showInformationMessage, 'Executing workflow workflow1 in environment default');
+		sinon.assert.calledOnce(showInformationMessage);
+		sinon.assert.alwaysCalledWithExactly(showInformationMessage, 'Executing workflow workflow1 in environment default');
 	});
 });

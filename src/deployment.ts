@@ -1,4 +1,4 @@
-import * as YAML from 'yaml'
+import * as YAML from 'yaml';
 import { Logger } from './logger';
 import { window, workspace } from 'vscode';
 
@@ -11,7 +11,7 @@ export class Deployment {
   static async init(log: Logger): Promise<Deployment> {
     log.write(`Looking for file ./conf/deployment.yml`);
     const deploymentFile = await workspace.findFiles('conf/deployment.yml', undefined, 1, undefined);
-    if (deploymentFile.length == 0) {
+    if (deploymentFile.length === 0) {
       window.showErrorMessage('Unable to load conf/deployment.yml');
       log.write(`Unable to load conf/deployment.yml`);
       return new Deployment({ environments: {} });
@@ -28,7 +28,7 @@ export class Deployment {
   }
 
   getWorkflows(environment: string | undefined): string[] {
-    if (environment == undefined) {
+    if (environment === undefined) {
       return [];
     }
     return this.deployment.environments[environment].workflows.map((w: any) => w.name);

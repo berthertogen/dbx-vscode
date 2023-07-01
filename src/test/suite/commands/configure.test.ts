@@ -9,20 +9,20 @@ import { Logger } from '../../../logger';
 suite('Configure', () => {
 	let sandbox: sinon.SinonSandbox = sinon.createSandbox();
 
-	let stub_showInputBox: sinon.SinonStub;
-	let stub_activeTerminal: sinon.SinonStub;
-	let stub_createTerminal: sinon.SinonStub;
-	const stub_terminal = { show: sandbox.stub(), sendText: sandbox.stub() } as any
-	let stub_showInformationMessage: sinon.SinonStub;
+	let showInputBox: sinon.SinonStub;
+	let activeTerminal: sinon.SinonStub;
+	let createTerminal: sinon.SinonStub;
+	const terminal = { show: sandbox.stub(), sendText: sandbox.stub() } as any;
+	let showInformationMessage: sinon.SinonStub;
 
 	beforeEach(() => {
-		stub_showInputBox = sandbox.stub(window, 'showInputBox');
-		stub_activeTerminal = sandbox.stub(window, 'activeTerminal');
-		stub_createTerminal = sandbox.stub(window, 'createTerminal');
-		stub_showInformationMessage = sandbox.stub(window, 'showInformationMessage');
+		showInputBox = sandbox.stub(window, 'showInputBox');
+		activeTerminal = sandbox.stub(window, 'activeTerminal');
+		createTerminal = sandbox.stub(window, 'createTerminal');
+		showInformationMessage = sandbox.stub(window, 'showInformationMessage');
 
-		stub_showInputBox.returns('default');
-		stub_createTerminal.returns(stub_terminal);
+		showInputBox.returns('default');
+		createTerminal.returns(terminal);
 	});
 
 	afterEach(() => {
@@ -39,11 +39,11 @@ suite('Configure', () => {
 
 		await command.action();
 
-		sinon.assert.calledOnce(stub_terminal.show);
-		sinon.assert.calledOnce(stub_terminal.sendText);
-		sinon.assert.alwaysCalledWithExactly(stub_terminal.sendText, 'dbx configure --environment default');
+		sinon.assert.calledOnce(terminal.show);
+		sinon.assert.calledOnce(terminal.sendText);
+		sinon.assert.alwaysCalledWithExactly(terminal.sendText, 'dbx configure --environment default');
 
-		sinon.assert.calledOnce(stub_showInformationMessage);
-		sinon.assert.alwaysCalledWithExactly(stub_showInformationMessage, 'Configuring environment default');
+		sinon.assert.calledOnce(showInformationMessage);
+		sinon.assert.alwaysCalledWithExactly(showInformationMessage, 'Configuring environment default');
 	});
 });

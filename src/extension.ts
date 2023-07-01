@@ -12,7 +12,7 @@ export function activate(context: ExtensionContext) {
 		new HelloWorld(log),
 		new Execute(log),
 		new Configure(log),
-	]
+	];
 	const disposables = myCommands.map(command => commands.registerCommand(command.id, async () => await command.action()));
 	disposables.forEach(disposable => context.subscriptions.push(disposable));
 }

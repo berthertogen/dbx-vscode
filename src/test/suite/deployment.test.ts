@@ -6,17 +6,17 @@ import { window, workspace } from 'vscode';
 import { beforeEach, afterEach } from 'mocha';
 
 suite('Deployment', () => {
-  let stub_findFiles: sinon.SinonStub;
-  let stub_openTextDocument: sinon.SinonStub;
-  let stub_showErrorMessage: sinon.SinonStub;
+  let findFiles: sinon.SinonStub;
+  let openTextDocument: sinon.SinonStub;
+  let showErrorMessage: sinon.SinonStub;
   let sandbox: sinon.SinonSandbox = sinon.createSandbox();
 
   beforeEach(() => {
-    stub_findFiles = sandbox.stub(workspace, 'findFiles');
-    stub_openTextDocument = sandbox.stub(workspace, 'openTextDocument');
-    stub_showErrorMessage = sandbox.stub(window, 'showErrorMessage');
+    findFiles = sandbox.stub(workspace, 'findFiles');
+    openTextDocument = sandbox.stub(workspace, 'openTextDocument');
+    showErrorMessage = sandbox.stub(window, 'showErrorMessage');
 
-    stub_openTextDocument.returns({
+    openTextDocument.returns({
       getText: sinon.stub().returns(`
     environments:
       default:
@@ -28,7 +28,7 @@ suite('Deployment', () => {
           - name: workflow3
           - name: workflow4
     `)
-    })
+    });
 
   });
 
@@ -37,16 +37,16 @@ suite('Deployment', () => {
   });
 
   test('shows error when deployment file not found', async () => {
-    stub_findFiles.returns([]);
+    findFiles.returns([]);
 
     await Deployment.init(new Logger());
 
-    sinon.assert.calledOnce(stub_showErrorMessage);
-    sinon.assert.alwaysCalledWithExactly(stub_showErrorMessage, 'Unable to load conf/deployment.yml');
+    sinon.assert.calledOnce(showErrorMessage);
+    sinon.assert.alwaysCalledWithExactly(showErrorMessage, 'Unable to load conf/deployment.yml');
   });
 
   test('returns empty deployment when deployment file not found', async () => {
-    stub_findFiles.returns([]);
+    findFiles.returns([]);
 
     const deployment = await Deployment.init(new Logger());
 
@@ -54,7 +54,7 @@ suite('Deployment', () => {
   });
 
   test('has function to get environments', async () => {
-    stub_findFiles.returns([{ path: 'conf/deployment.yml' }]);
+    findFiles.returns([{ path: 'conf/deployment.yml' }]);
     const deployment = await Deployment.init(new Logger());
 
     const environments = deployment.getEnvironments();
@@ -64,7 +64,7 @@ suite('Deployment', () => {
   });
 
   test('has function to get workflows', async () => {
-    stub_findFiles.returns([{ path: 'conf/deployment.yml' }]);
+    findFiles.returns([{ path: 'conf/deployment.yml' }]);
     const deployment = await Deployment.init(new Logger());
 
     const workflows = deployment.getWorkflows('default');
@@ -74,7 +74,7 @@ suite('Deployment', () => {
   });
 
   test('function to get workflows returns [] on undefined', async () => {
-    stub_findFiles.returns([{ path: 'conf/deployment.yml' }]);
+    findFiles.returns([{ path: 'conf/deployment.yml' }]);
     const deployment = await Deployment.init(new Logger());
 
     const workflows = deployment.getWorkflows(undefined);

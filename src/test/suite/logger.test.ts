@@ -6,7 +6,7 @@ suite('Logger', () => {
 	test('has function to write', () => {
 		const sandbox = sinon.createSandbox();
 		const stub = sandbox.stub(window, 'createOutputChannel');
-		const stubChild = { appendLine: sandbox.stub() } as any
+		const stubChild = { appendLine: sandbox.stub() } as any;
 		stub.returns(stubChild);
 
 		const log = new Logger();
