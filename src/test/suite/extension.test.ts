@@ -1,17 +1,29 @@
 import * as assert from 'assert';
-import { activate_with_vscode } from '../../extension';
-import { VSCodeFactory } from './stubs';
+import { activate } from '../../extension';
 import sinon = require('sinon');
+import { commands } from 'vscode';
+import { beforeEach, afterEach } from 'mocha';
 
 suite('Extensions', () => {
-	test('maps and adds commands to context', () => {
-		const vscodeFactory = new VSCodeFactory()
-			.create();
-		const context = { subscriptions: [] } as any; 	
-		activate_with_vscode(vscodeFactory.vscode, context);
+	let sandbox: sinon.SinonSandbox = sinon.createSandbox();
 
-		assert.equal(context.subscriptions.length, 2);
-    sinon.assert.calledWith(vscodeFactory.vscode.commands.registerCommand, 'dbx.helloWorld');
-    sinon.assert.calledWith(vscodeFactory.vscode.commands.registerCommand, 'dbx.execute');
+	let stub_registerCommand: sinon.SinonStub;
+
+	beforeEach(() => {
+		stub_registerCommand = sandbox.stub(commands, 'registerCommand');
+	});
+
+	afterEach(() => {
+		sandbox.restore();
+	});
+
+	test('maps and adds commands to context', () => {
+		const context = { subscriptions: [] } as any;
+		activate(context);
+
+		assert.equal(context.subscriptions.length, 3);
+		sinon.assert.calledWith(stub_registerCommand, 'dbx.helloWorld');
+		sinon.assert.calledWith(stub_registerCommand, 'dbx.execute');
+		sinon.assert.calledWith(stub_registerCommand, 'dbx.configure');
 	});
 });

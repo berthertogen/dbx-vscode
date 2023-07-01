@@ -1,6 +1,4 @@
 import sinon = require('sinon');
-import { HelloWorld } from '../../commands';
-import { Logger } from '../../logger';
 
 function vscode() {
   const stub = {
@@ -10,6 +8,7 @@ function vscode() {
       showErrorMessage: sinon.stub(),
       createOutputChannel: sinon.stub(),
       showQuickPick: sinon.stub(),
+      showInputBox: sinon.stub(),
     },
     workspace: {
       openTextDocument: sinon.stub(),
@@ -70,6 +69,7 @@ export class VSCodeFactory {
 
     this.vscode.window.showQuickPick.withArgs(['default', 'other']).returns('default');
     this.vscode.window.showQuickPick.withArgs(['workflow1', 'workflow2']).returns('workflow1');
+    this.vscode.window.showInputBox.returns('default');
 
     return this;
   }

@@ -1,34 +1,36 @@
 import * as YAML from 'yaml'
 import { Logger } from './logger';
+import { window, workspace } from 'vscode';
 
 export class Deployment {
   deployment: any;
-  vscode: any;
-  private constructor(vscode: any, deployment: any) {
-    this.vscode = vscode;
+  private constructor(deployment: any) {
     this.deployment = deployment;
   }
 
-  static async init(vscode: any, log: Logger): Promise<Deployment> {
+  static async init(log: Logger): Promise<Deployment> {
     log.write(`Looking for file ./conf/deployment.yml`);
-    const deploymentFile = await vscode.workspace.findFiles('conf/deploymentqsdqs.yml', null, 1, null);
+    const deploymentFile = await workspace.findFiles('conf/deployment.yml', undefined, 1, undefined);
     if (deploymentFile.length == 0) {
-      vscode.window.showErrorMessage('Unable to load conf/deployment.yml');
+      window.showErrorMessage('Unable to load conf/deployment.yml');
       log.write(`Unable to load conf/deployment.yml`);
-      return new Deployment(vscode, { environments: {} });
+      return new Deployment({ environments: {} });
     }
     log.write(`Found file ${deploymentFile}`);
-    const document = await vscode.workspace.openTextDocument(deploymentFile[0].path);
+    const document = await workspace.openTextDocument(deploymentFile[0].path);
     let text = document.getText();
     const deployment = YAML.parse(text);
-    return new Deployment(vscode, deployment);
+    return new Deployment(deployment);
   }
 
   getEnvironments(): string[] {
     return Object.keys(this.deployment.environments);
   }
 
-  getWorkflows(environment: string): string[] {
+  getWorkflows(environment: string | undefined): string[] {
+    if (environment == undefined) {
+      return [];
+    }
     return this.deployment.environments[environment].workflows.map((w: any) => w.name);
   }
 }

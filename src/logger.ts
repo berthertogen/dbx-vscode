@@ -1,7 +1,9 @@
+import { window } from "vscode";
+
 export class Logger {
   log: any;
-  constructor(vscode: any) {
-    this.log = vscode.window.createOutputChannel("dbx");
+  constructor() {
+    this.log = window.createOutputChannel("dbx", undefined);
   }
 
   write(message: string) {

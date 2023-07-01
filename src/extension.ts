@@ -1,20 +1,19 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
-import { HelloWorld, Execute } from './commands';
+import { ExtensionContext, commands } from 'vscode';
+import { HelloWorld } from "./commands/hello-world";
+import { Execute } from './commands/execute';
+import { Configure } from './commands/configure';
 import { Logger } from './logger';
 
-export function activate(context: vscode.ExtensionContext) {
-	activate_with_vscode(vscode, context);
-}
-
-export function activate_with_vscode(vscode: any, context: vscode.ExtensionContext){
-	const log = new Logger(vscode);
-	const commands = [
-		new HelloWorld(vscode, log),
-		new Execute(vscode, log),
+export function activate(context: ExtensionContext) {
+	const log = new Logger();
+	const myCommands = [
+		new HelloWorld(log),
+		new Execute(log),
+		new Configure(log),
 	]
-	const disposables = commands.map(command => vscode.commands.registerCommand(command.id, async () => await command.action()));
+	const disposables = myCommands.map(command => commands.registerCommand(command.id, async () => await command.action()));
 	disposables.forEach(disposable => context.subscriptions.push(disposable));
 }
 
