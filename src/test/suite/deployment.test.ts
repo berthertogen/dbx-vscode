@@ -2,7 +2,6 @@ import sinon = require('sinon');
 import { Deployment } from '../../deployment';
 import assert = require('assert');
 import { Logger } from '../../logger';
-import { VSCodeFactory } from './stubs';
 import { window, workspace } from 'vscode';
 import { beforeEach, afterEach } from 'mocha';
 

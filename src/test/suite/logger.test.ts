@@ -13,7 +13,6 @@ suite('Logger', () => {
 		log.write('Hello World');
 
 		sandbox.assert.calledOnce(stub);
-		// sandbox.assert.calledOnceWithExactly(stub, `dbx`, undefined as any);
-		// sandbox.assert.calledOnceWithExactly(stubChild.appendLine, `Hello World`);
+		sandbox.assert.calledOnceWithExactly(stubChild.appendLine, `Hello World`);
 	});
 });
