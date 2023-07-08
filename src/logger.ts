@@ -1,7 +1,7 @@
-import { window } from "vscode";
+import { OutputChannel, window } from "vscode";
 
 export class Logger {
-  log: any;
+  log: OutputChannel;
   constructor() {
     this.log = window.createOutputChannel("dbx", undefined);
   }

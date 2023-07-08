@@ -2,6 +2,7 @@ import { Deployment } from "../deployment";
 import { Logger } from "../logger";
 import { window } from 'vscode';
 import { Command } from "./base";
+import { Run } from "../run";
 
 
 export class Execute extends Command {
@@ -22,13 +23,9 @@ export class Execute extends Command {
     const workflow = await window.showQuickPick(workflows, { placeHolder: 'workflow', title: 'Select the workflow to execute' });
     this.log.write(`Selected workflow ${workflow}`);
 
-    const terminal = window.createTerminal({
-      name: `Executing workflow`,
-      hideFromUser: false,
-    });
     window.showInformationMessage(`Executing workflow ${workflow} in environment ${environment}`);
     this.log.write(`dbx execute ${workflow} --environment ${environment}`);
-    terminal.show();
-    terminal.sendText(`dbx execute ${workflow} --environment ${environment}`);
+    const result = await new Run().run(`dbx execute ${workflow} --environment ${environment}`);
+    this.log.write(result);
   }
 }

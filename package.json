@@ -27,7 +27,30 @@
         "command": "dbx.configure",
         "title": "dbx:Configure workflow"
       }
-    ]
+    ],
+    "viewsWelcome": [
+      {
+        "view": "dbx-configuration",
+        "contents": "dbx configuration not found. Please run dbx:init to create a configuration file."
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "dbx",
+          "title": "dbx",
+          "icon": "src/resources/dbx.svg"
+        }
+      ]
+    },
+    "views": {
+      "dbx": [
+        {
+          "id": "dbx-configuration",
+          "name": "Configuration"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -48,6 +71,7 @@
     "eslint": "^8.41.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
+    "pre-commit": "^1.2.2",
     "typescript": "^5.1.3",
     "vscode-extension-tester": "^5.8.0"
   },

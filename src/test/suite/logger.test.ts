@@ -1,10 +1,10 @@
-import * as sinon from 'sinon';
+import { createSandbox }  from 'sinon';
 import { Logger } from '../../logger';
 import { window } from 'vscode';
 
 suite('Logger', () => {
 	test('has function to write', () => {
-		const sandbox = sinon.createSandbox();
+		const sandbox = createSandbox();
 		const stub = sandbox.stub(window, 'createOutputChannel');
 		const stubChild = { appendLine: sandbox.stub() } as any;
 		stub.returns(stubChild);

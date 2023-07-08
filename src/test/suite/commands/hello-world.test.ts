@@ -1,16 +1,17 @@
-import * as assert from 'assert';
-import * as sinon from 'sinon';
+import { equal } from 'assert';
+
+import { createSandbox, SinonSandbox, SinonSpy } from 'sinon';
 import { beforeEach, afterEach } from 'mocha';
 import { window } from 'vscode';
 import { HelloWorld } from '../../../commands/hello-world';
 import { Logger } from '../../../logger';
 
 	suite('HelloWorld', () => {
-		let showInformationMessage: sinon.SinonStub;
-		let sandbox: sinon.SinonSandbox = sinon.createSandbox();
+		const sandbox: SinonSandbox = createSandbox();
+		let showInformationMessageSpy: SinonSpy;
 
 		beforeEach(() => {
-			showInformationMessage = sandbox.stub(window, 'showInformationMessage');
+			showInformationMessageSpy = sandbox.spy(window, 'showInformationMessage');
 		});
 
 		afterEach(() => {
@@ -20,7 +21,7 @@ import { Logger } from '../../../logger';
 		test('has command id with prefix', () => {
 			const command = new HelloWorld(new Logger());
 
-			assert.equal(command.id, 'dbx.helloWorld');
+			equal(command.id, 'dbx.helloWorld');
 		});
 
 		test('has function to execute action', async () => {
@@ -28,6 +29,6 @@ import { Logger } from '../../../logger';
 
 			await command.action();
 
-			sandbox.assert.calledOnceWithExactly(showInformationMessage, `Hello World from dbx!`);
+			sandbox.assert.calledOnceWithExactly(showInformationMessageSpy, `Hello World from dbx!`);
 		});
 	});
